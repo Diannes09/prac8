@@ -109,18 +109,23 @@ class Oldcar(Car):
 
 class SilverServiceTaxi(Car):
 
-    def __init__(self, name="", fuel=0.00, fanciness=4.0):
-        super().__init__(name, fuel, fanciness)
+    def __init__(self, name="", fuel=0.00):
+        super().__init__(name, fuel)
         """ initialise a Car instance """
-
+        fanciness = 4
+        price_per_km = 1.2 * fanciness
         self.name = name
         self.fuel = fuel
         self.odometer = 0
         self.fanciness = fanciness
         self.flagfall = 4.5
 
+        self.current_fare_distance = 0
+
     def __str__(self):
-        return "{}, fuel={}, odo={}".format(self.name, self.fuel, self.odometer)
+        price_per_km = 1.2 * self.fanciness
+        return "{}, ${:.2f}/km plus flagfall of ${:.2f}, {}km on current fare".format(super().__str__(), price_per_km, self.flagfall,
+                                                             self.current_fare_distance)
 
     def add_fuel(self, amount):
         """ add amount to the car's fuel"""
@@ -128,9 +133,8 @@ class SilverServiceTaxi(Car):
 
     def get_fare(self):
         """ get the price for the taxi trip """
-        price_per_km = 1.2
-        silver_price_per_km = price_per_km * 4
-        return price_per_km * self.current_fare_distance
+        price_per_km = 1.2 * self.fanciness
+        return price_per_km * self.current_fare_distance + 4.5
 
     def drive(self, distance):
         """ drive like parent Car but calculate fare distance as well"""
